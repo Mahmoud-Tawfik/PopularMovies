@@ -143,14 +143,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     @Override
     public void onLoadFinished(Loader<MovieDBResult> loader, MovieDBResult data) {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        currentPage = data.page;
-        maxPage = data.totalPages;
-        movies = data.movies;
-        mMoviesAdapter.setMoviesData(movies);
         if (null == data) {
             showErrorMessage();
         } else {
             showWeatherDataView();
+            currentPage = data.page;
+            maxPage = data.totalPages;
+            movies = data.movies;
+            mMoviesAdapter.setMoviesData(movies);
         }
     }
 

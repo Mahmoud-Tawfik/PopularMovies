@@ -3,6 +3,8 @@ package com.example.android.popularmovies.utilities;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.android.popularmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,7 +26,7 @@ public final class NetworkUtils {
     private static final String PAGE_PARAM = "page";
     private static final String REGION_PARAM = "region";
 
-    private static final String apiKey = "YOUR_API_KEY_GOES_HERE";
+    private static final String apiKey = BuildConfig.API_KEY;
     private static final String language = "en-US";
     private static final String region = "CANADA";
 
