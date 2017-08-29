@@ -11,6 +11,9 @@ import com.example.android.popularmovies.utilities.Movie;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by Mahmoud on 8/3/17.
@@ -18,11 +21,11 @@ import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private TextView mMovieTitleDisplay;
-    private ImageView mMoviePosterDisplay;
-    private TextView mMovieReleaseDateDisplay;
-    private TextView mMovieRatingDisplay;
-    private TextView mMovieOverviewDisplay;
+    @BindView(R.id.tv_movie_title) TextView mMovieTitleDisplay;
+    @BindView(R.id.iv_movie_poster) ImageView mMoviePosterDisplay;
+    @BindView(R.id.tv_movie_release_date) TextView mMovieReleaseDateDisplay;
+    @BindView(R.id.tv_movie_rating) TextView mMovieRatingDisplay;
+    @BindView(R.id.tv_movie_overview) TextView mMovieOverviewDisplay;
 
     private Movie movie;
 
@@ -31,11 +34,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mMovieTitleDisplay = (TextView) findViewById(R.id.tv_movie_title);
-        mMoviePosterDisplay = (ImageView) findViewById(R.id.iv_movie_poster);
-        mMovieReleaseDateDisplay = (TextView) findViewById(R.id.tv_movie_release_date);
-        mMovieRatingDisplay = (TextView) findViewById(R.id.tv_movie_rating);
-        mMovieOverviewDisplay = (TextView) findViewById(R.id.tv_movie_overview);
+        ButterKnife.bind(this);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -47,7 +46,7 @@ public class DetailActivity extends AppCompatActivity {
                 mMovieRatingDisplay.setText(movie.voteAverage.toString() + "/10");
                 mMovieOverviewDisplay.setText(movie.overview);
                 Uri uri = Uri.parse(movie.posterUrl());
-                Picasso.with(this).load(uri).into(mMoviePosterDisplay);
+                Picasso.with(this).load(uri).placeholder(R.drawable.movie_placeholder).into(mMoviePosterDisplay);
             }
         }
 

@@ -24,12 +24,16 @@ import com.google.gson.Gson;
 
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, LoaderCallbacks<MovieDBResult> {
 
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerview_movies) RecyclerView mRecyclerView;
+    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+
     private MoviesAdapter mMoviesAdapter;
-    private TextView mErrorMessageDisplay;
-    private ProgressBar mLoadingIndicator;
 
     private static final int MOVIES_LOADER_ID = 0;
 
@@ -43,14 +47,18 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     final static String POPULAR_PARAM = "popular";
     final static String TOP_RATED_PARAM = "top_rated";
     private String sortType = POPULAR_PARAM;
+    final static String SORT_TYPE = "SORT_TYPE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movies);
+        if (savedInstanceState != null) {
+            sortType = savedInstanceState.getString(SORT_TYPE);
+        }
 
         int itemCount = 2;
         GridLayoutManager layoutManager = new GridLayoutManager(this, itemCount);
@@ -63,12 +71,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setAdapter(mMoviesAdapter);
         mMoviesAdapter.setMoviesData(movies);
 
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-
         callback = MainActivity.this;
 
-        getSupportLoaderManager().initLoader(loaderId, null, callback);
+        if (getSupportLoaderManager().getLoader(loaderId) == null) {
+            getSupportLoaderManager().initLoader(loaderId, null, callback);
+        } else {
+            getSupportLoaderManager().restartLoader(loaderId, null, callback);
+        }
 
     }
 
@@ -103,13 +112,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 }
             }
 
-            /**
-             * This is the method of the AsyncTaskLoader that will load and parse the JSON data
-             * from OpenWeatherMap in the background.
-             *
-             * @return Weather data from OpenWeatherMap as an array of Strings.
-             *         null if an error occurs
-             */
             @Override
             public MovieDBResult loadInBackground() {
 
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         if (null == data) {
             showErrorMessage();
         } else {
-            showWeatherDataView();
+            showMovieDataView();
             currentPage = data.page;
             maxPage = data.totalPages;
             movies = data.movies;
@@ -208,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMoviesAdapter.setMoviesData(null);
     }
 
-    private void showWeatherDataView() {
+    private void showMovieDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -216,6 +218,19 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private void showErrorMessage() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        sortType = savedInstanceState.getString(SORT_TYPE);
+    }
+
+    // invoked when the activity may be temporarily destroyed, save the instance state here
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(SORT_TYPE, sortType);
+
+        super.onSaveInstanceState(outState);
     }
 
 }

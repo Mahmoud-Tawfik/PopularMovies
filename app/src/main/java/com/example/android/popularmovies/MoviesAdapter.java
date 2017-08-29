@@ -63,7 +63,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         Movie movie = mMoviesData[position];
         Context context = holder.mImageView.getContext();
         Uri uri = Uri.parse(movie.posterUrl());
-        Picasso.with(context).load(uri).into(holder.mImageView);
+        Picasso.with(context).load(uri).placeholder(R.drawable.movie_placeholder).into(holder.mImageView);
     }
 
     @Override
