@@ -11,5 +11,10 @@
         android:title="@string/sort_top_rated"
         app:showAsAction="collapseActionView"
         />
+    <item
+        android:id="@+id/sort_fav"
+        android:title="@string/sort_fav"
+        app:showAsAction="collapseActionView"
+        />
 
 </menu>

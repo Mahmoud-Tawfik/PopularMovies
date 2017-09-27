@@ -25,7 +25,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-
+        <provider
+            android:name=".data.MovieContentProvider"
+            android:authorities="com.example.android.popularmovies.data"
+            android:exported="false"
+            android:readPermission="com.example.android.popularmovies.data.READ"
+            android:writePermission="com.example.android.popularmovies.data.WRITE"/>
 </application>
 
 </manifest>

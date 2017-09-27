@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="error_message">An error has occurred. Please try again later!</string>
+    <string name="no_fav_message">No movies added to your favorite list yet!</string>
     <string name="sort_popular">Popular</string>
     <string name="sort_top_rated">Top Rated</string>
+    <string name="sort_fav">Favorites</string>
+
+    <string name="API_BASE_URL">http://api.themoviedb.org/3/</string>
+    <string name="API_KEY_PARAM">api_key</string>
+    <string name="LANGUAGE_PARAM">language</string>
+    <string name="PAGE_PARAM">page</string>
+    <string name="REGION_PARAM">region</string>
+    <string name="language">en-US</string>
+    <string name="region">CANADA</string>
+
+    <string name="remove_from_favorites_message">Movie removed from Favorites</string>
+    <string name="add_to_favorites_message">Movie Added to Favorites</string>
+    <string name="movie_poster_image">Movie Poster Image</string>
+    <string name="video_thumbnail">Video Thumbnail</string>
+    <string name="play_video">Play Video</string>
+
 </resources>

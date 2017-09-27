@@ -3,13 +3,18 @@ package com.example.android.popularmovies;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.android.popularmovies.utilities.Movie;
+import com.example.android.popularmovies.themoviedb.Movie;
 import com.squareup.picasso.Picasso;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by Mahmoud on 8/3/17.
@@ -17,7 +22,9 @@ import com.squareup.picasso.Picasso;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-    private Movie[] mMoviesData;
+    private List<Movie> mMoviesData;
+
+    WeakReference<Context> contextRef;
 
     final private MoviesAdapterOnClickHandler mClickHandler;
 
@@ -41,7 +48,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         @Override
         public void onClick(View v) {
             int adaptorPosition = getAdapterPosition();
-            Movie movie = mMoviesData[adaptorPosition];
+            Movie movie = mMoviesData.get(adaptorPosition);
             mClickHandler.onClick(movie);
         }
 
@@ -49,9 +56,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        Context context = viewGroup.getContext();
+        contextRef = new WeakReference(viewGroup.getContext());
         int layoutIdForListItem = R.layout.movie_list_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(contextRef.get());
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
@@ -60,7 +67,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
-        Movie movie = mMoviesData[position];
+        DisplayMetrics displayMetrics = contextRef.get().getResources().getDisplayMetrics();
+        if (displayMetrics.widthPixels > displayMetrics.heightPixels) {
+            holder.itemView.getLayoutParams().width = Toolbar.LayoutParams.WRAP_CONTENT;
+            holder.itemView.getLayoutParams().height = Toolbar.LayoutParams.MATCH_PARENT;
+        }
+
+        Movie movie = mMoviesData.get(position);
         Context context = holder.mImageView.getContext();
         Uri uri = Uri.parse(movie.posterUrl());
         Picasso.with(context).load(uri).placeholder(R.drawable.movie_placeholder).into(holder.mImageView);
@@ -69,10 +82,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public int getItemCount() {
         if (null == mMoviesData) return 0;
-        return mMoviesData.length;
+        return mMoviesData.size();
     }
 
-    public void setMoviesData(Movie[] moviesData){
+    public void setMoviesData(List<Movie> moviesData){
         mMoviesData = moviesData;
         notifyDataSetChanged();
     }
